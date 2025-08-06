@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from celery.schedules import crontab
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -109,10 +111,23 @@ CORS_ALLOWED_ORIGINS = [
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'PAGE_SIZE': 5,
 }
 
 CELERY_TIMEZONE = 'UTC'
+
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+
+CELERY_BEAT_SCHEDULE = {
+    'send_reminders_every_minute': {
+        'task': 'telegram_bot.tasks.send_reminders',
+        'schedule': crontab(),
+    },
+}
+
+
+AUTH_USER_MODEL = 'auth.User'
