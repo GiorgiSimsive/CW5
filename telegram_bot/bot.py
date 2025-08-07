@@ -1,8 +1,7 @@
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from django.conf import settings
 from django.contrib.auth.models import User
-from users.models import Profile
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -18,7 +17,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(chat_id=tg_id, text="Пользователь не найден.")
 
 
-def run_bot():
+def run_bot() -> None:
     app = ApplicationBuilder().token(settings.TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.run_polling()
