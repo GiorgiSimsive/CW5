@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# usage: ./wait-for-it.sh host:port -t 60 -- cmd args...
 set -e
 HP="$1"; shift
 HOST="${HP%:*}"; PORT="${HP#*:}"
