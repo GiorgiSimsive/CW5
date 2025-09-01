@@ -108,9 +108,17 @@ jobs:
       - name: Run tests
         env:
           SECRET_KEY: test-secret
+          USER: postgres
+          PASSWORD: postgres
+          NAME: cw5_test
+          HOST: 127.0.0.1
+          PORT: 5432
+          REDIS_HOST: 127.0.0.1
+          REDIS_PORT: 6379
         run: |
           source .venv/bin/activate
           pytest
+  
 
   docker_build_check:
     name: Docker build (no push)
