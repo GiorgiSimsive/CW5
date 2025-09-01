@@ -1,11 +1,11 @@
 **
 !Dockerfile
-!docker
+!docker/**
 !nginx.conf
-!config
-!users
-!telegram_bot
-!habits
+!config/**
+!users/**
+!telegram_bot/**
+!habits/**
 !manage.py
 !poetry.lock
 !pyproject.toml
