@@ -3,11 +3,9 @@ max-line-length = 120
 extend-ignore = E203, W503
 exclude =
     .git,
-    __pycache__,
     .venv,
     venv,
+    __pycache__,
     */migrations/*
-
 per-file-ignores =
     __init__.py:F401
-ions
