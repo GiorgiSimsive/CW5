@@ -1,14 +1,16 @@
+from django.db.models import QuerySet
 from rest_framework import generics, permissions
+
 from .models import Habit
-from .serializers import HabitSerializer
 from .permissions import IsOwnerOrReadOnly
+from .serializers import HabitSerializer
 
 
 class UserHabitListCreateView(generics.ListCreateAPIView):
     serializer_class = HabitSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Habit]:
         return Habit.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
@@ -26,5 +28,5 @@ class HabitDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Habit.objects.all()
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Habit]:
         return Habit.objects.filter(user=self.request.user)

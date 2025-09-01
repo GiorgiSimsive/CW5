@@ -1,4 +1,7 @@
+from typing import Any
+
 from rest_framework import serializers
+
 from .models import Habit
 
 
@@ -8,7 +11,7 @@ class HabitSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ["user"]
 
-    def validate(self, data):
+    def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         reward = data.get("reward")
         linked_habit = data.get("linked_habit")
         is_pleasant = data.get("is_pleasant", False)
