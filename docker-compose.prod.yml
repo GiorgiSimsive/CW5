@@ -28,7 +28,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # единый образ приложения из GHCR
+
   backend:
     image: ghcr.io/${GITHUB_OWNER}/${GITHUB_REPO}/app:${IMAGE_TAG}
     restart: unless-stopped
@@ -43,7 +43,6 @@ services:
     volumes:
       - django_static:/app/staticfiles
       - media_volume:/app/media
-    # в проде можно убрать публикацию порта, оставить только через nginx
     ports:
       - "8000:8000"
 
@@ -86,7 +85,7 @@ services:
       - django_static:/usr/share/nginx/html/static:ro
       - media_volume:/usr/share/nginx/html/media:ro
     ports:
-      - "80:80" # если порт 80 занят на сервере — поменяй на "8080:80"
+      - "80:80"
 
 volumes:
   postgres_data:

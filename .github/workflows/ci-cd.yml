@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   pull_request:
-    branches: [ "main", "develop" ]     # CI на PR в develop/main
+    branches: [ "main", "develop" ]
   push:
-    branches: [ "main" ]                # CD только на push (merge) в main
+    branches: [ "main" ]
 
 permissions:
   contents: read

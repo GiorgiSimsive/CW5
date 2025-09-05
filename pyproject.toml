@@ -18,12 +18,14 @@ djangorestframework-simplejwt = "^5.5.1"
 django-celery-beat = "^2.8.1"
 urllib3 = "^2.5.0"
 python-telegram-bot = "^22.3"
+gunicorn = "^23.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
 pytest-django = "^4.11.1"
 pytest-cov = "^6.2.1"
+ipython = "^9.4.0"
 
 
 [tool.poetry.group.lint.dependencies]
