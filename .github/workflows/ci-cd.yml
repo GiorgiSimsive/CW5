@@ -144,8 +144,8 @@ jobs:
       - name: Compute image name (lowercase)
         id: img
         run: |
-          REPO_FULL="${{ github.repository }}"                       # например GiorgiSimsive/CW5
-          REPO_FULL_LC="$(echo "$REPO_FULL" | tr '[:upper:]' '[:lower:]')"  # giorgisimsive/cw5
+          REPO_FULL="${{ github.repository }}"
+          REPO_FULL_LC="$(echo "$REPO_FULL" | tr '[:upper:]' '[:lower:]')"
           echo "owner_repo_lc=$REPO_FULL_LC" >> "$GITHUB_OUTPUT"
           echo "image=ghcr.io/$REPO_FULL_LC/app" >> "$GITHUB_OUTPUT"
 
@@ -229,14 +229,10 @@ jobs:
             set -e
             echo "${GHCR_TOKEN}" | docker login "$REGISTRY" -u "${GHCR_USERNAME}" --password-stdin
             cd "${PROD_PATH}"
-            # нижний регистр для имени образа
             export GITHUB_OWNER="$(echo "${GITHUB_OWNER}" | tr '[:upper:]' '[:lower:]')"
             export GITHUB_REPO="$(echo "${GITHUB_REPO}" | tr '[:upper:]' '[:lower:]')"
-            # ВАЖНО: сформировать IMAGE_NAME, который ждёт compose
             export IMAGE_NAME="${GITHUB_OWNER}/${GITHUB_REPO}/app"
-            # тег из build job
             export IMAGE_TAG="${IMAGE_TAG}"
-            # можно подсмотреть что получилось
             echo "Using image: ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
 
             docker compose -f docker-compose.prod.yml pull
