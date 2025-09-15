@@ -144,14 +144,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Normalize image name (lowercase)
+        run: echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}/app" >> $GITHUB_ENV
+
       - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build & Push
         uses: docker/build-push-action@v6
         with:
@@ -171,6 +177,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Ensure remote dir exists
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -180,6 +187,7 @@ jobs:
           script_stop: true
           script: |
             mkdir -p "${{ secrets.PROD_PATH }}"
+
       - name: Upload compose & nginx.conf
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -190,6 +198,7 @@ jobs:
           target: "${{ secrets.PROD_PATH }}"
           strip_components: 0
           overwrite: true
+
       - name: SSH deploy
         uses: appleboy/ssh-action@v1.2.0
         env:
@@ -210,9 +219,12 @@ jobs:
             set -e
             echo "${GHCR_TOKEN}" | docker login $REGISTRY -u "${GHCR_USERNAME}" --password-stdin
             cd "${PROD_PATH}"
-            export GITHUB_OWNER="${GITHUB_OWNER}"
-            export GITHUB_REPO="${GITHUB_REPO}"
+
+            # ↓↓↓ делаем нижний регистр для compose, который собирает image из OWNER/REPO
+            export GITHUB_OWNER="$(echo "${GITHUB_OWNER}" | tr '[:upper:]' '[:lower:]')"
+            export GITHUB_REPO="$(echo "${GITHUB_REPO}" | tr '[:upper:]' '[:lower:]')"
             export IMAGE_TAG="${IMAGE_TAG}"
+
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
             docker image prune -f
