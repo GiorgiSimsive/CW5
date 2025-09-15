@@ -229,10 +229,17 @@ jobs:
             set -e
             echo "${GHCR_TOKEN}" | docker login "$REGISTRY" -u "${GHCR_USERNAME}" --password-stdin
             cd "${PROD_PATH}"
-            # compose ожидает нижний регистр в ghcr-имени (если в compose используешь ${GITHUB_OWNER}/${GITHUB_REPO})
+            # нижний регистр для имени образа
             export GITHUB_OWNER="$(echo "${GITHUB_OWNER}" | tr '[:upper:]' '[:lower:]')"
             export GITHUB_REPO="$(echo "${GITHUB_REPO}" | tr '[:upper:]' '[:lower:]')"
+            # ВАЖНО: сформировать IMAGE_NAME, который ждёт compose
+            export IMAGE_NAME="${GITHUB_OWNER}/${GITHUB_REPO}/app"
+            # тег из build job
             export IMAGE_TAG="${IMAGE_TAG}"
+            # можно подсмотреть что получилось
+            echo "Using image: ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
             docker image prune -f
+      
