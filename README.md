@@ -215,3 +215,5 @@ chmod 600 ~/.ssh/authorized_keys
 
 - CI: flake8 ругается на .venv/модули
 → В .flake8 исключены .venv, */migrations/*. Если запускаешь flake8 вручную — используй конфиг из репозитория.
+
+.
