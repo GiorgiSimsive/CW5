@@ -17,7 +17,7 @@ concurrency:
 env:
   PYTHON_VERSION: "3.12"
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository | toLowerCase }}/app
+  IMAGE_NAME: ${{ toLower(github.repository) }}/app
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
