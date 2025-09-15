@@ -175,6 +175,14 @@ jobs:
     needs: [build_and_push]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
+      - name: Validate deploy secrets
+        run: |
+          test -n "${{ secrets.PROD_HOST }}" || (echo "Missing secret: PROD_HOST" && exit 1)
+          test -n "${{ secrets.PROD_USER }}" || (echo "Missing secret: PROD_USER" && exit 1)
+          test -n "${{ secrets.PROD_PATH }}" || (echo "Missing secret: PROD_PATH" && exit 1)
+          test -n "${{ secrets.PROD_SSH_KEY }}" || (echo "Missing secret: PROD_SSH_KEY" && exit 1)
+          test -n "${{ secrets.GHCR_USERNAME }}" || (echo "Missing secret: GHCR_USERNAME" && exit 1)
+          test -n "${{ secrets.GHCR_TOKEN }}" || (echo "Missing secret: GHCR_TOKEN" && exit 1)
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -182,7 +190,7 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
+          username: ubuntu
           key: ${{ secrets.PROD_SSH_KEY }}
           script_stop: true
           script: |
@@ -192,7 +200,7 @@ jobs:
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
+          username: ubuntu
           key: ${{ secrets.PROD_SSH_KEY }}
           source: "docker-compose.prod.yml,nginx.conf"
           target: "${{ secrets.PROD_PATH }}"
@@ -212,7 +220,7 @@ jobs:
           PROD_PATH: ${{ secrets.PROD_PATH }}
         with:
           host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
+          username: ubuntu
           key: ${{ secrets.PROD_SSH_KEY }}
           script_stop: true
           script: |
